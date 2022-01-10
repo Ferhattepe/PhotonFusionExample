@@ -8,14 +8,59 @@ namespace Sources
         [SerializeField] private Ball _ballPrefab;
         [SerializeField] private PhysxBall _physxBallPrefab;
 
+
         private Vector3 _forward;
+        private Material _material;
+
+        Material material
+        {
+            get
+            {
+                if (_material == null)
+                    _material = GetComponentInChildren<MeshRenderer>().material;
+                return _material;
+            }
+        }
+
+        [Networked(OnChanged = nameof(OnBallSpawned))]
+        public NetworkBool spawned { get; set; }
 
         [Networked] private TickTimer delay { get; set; }
-        private NetworkCharacterController _characterController;
+
+        [Networked] private Vector3 NetworkPosition { get; set; }
+
+        // private NetworkCharacterController _characterController;
 
         private void Awake()
         {
-            _characterController = GetComponent<NetworkCharacterController>();
+            // _characterController = GetComponent<NetworkCharacterController>();
+        }
+
+        public static void OnBallSpawned(Changed<Player> changed)
+        {
+            changed.Behaviour.material.color = Color.white;
+        }
+
+        public override void Render()
+        {
+            material.color = Color.Lerp(material.color, Color.blue, Time.deltaTime);
+        }
+
+        private void Update()
+        {
+            if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.R))
+            {
+                RPC_SendMessage("Hey Mate");
+            }
+        }
+
+        [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+        public void RPC_SendMessage(string message, RpcInfo info = default)
+        {
+            if (info.Source == Runner.Simulation.LocalPlayer)
+                Debug.LogError($"You said: {message}");
+            else
+                Debug.LogError($"Some other player said: {message}");
         }
 
         public override void FixedUpdateNetwork()
@@ -23,8 +68,8 @@ namespace Sources
             if (GetInput(out NetworkInputData data))
             {
                 data.direction.Normalize();
-                _characterController.Move(data.direction * Runner.DeltaTime * 5);
-
+                // _characterController.Move(data.direction * Runner.DeltaTime * 5);
+                transform.position += data.direction * Runner.DeltaTime * 5;
 
                 if (data.direction.sqrMagnitude > 0)
                 {
@@ -39,6 +84,7 @@ namespace Sources
                         Runner.Spawn(_ballPrefab, transform.position + _forward, Quaternion.LookRotation(_forward),
                             Object.InputAuthority,
                             (runner, networkObject) => { networkObject.GetComponent<Ball>().Init(); });
+                        spawned = !spawned;
                     }
                     else if ((data.buttons & NetworkInputData.MOUSEBUTTON2) != 0)
                     {
@@ -52,6 +98,8 @@ namespace Sources
                     }
                 }
             }
+
+            NetworkPosition = transform.position;
         }
     }
 }

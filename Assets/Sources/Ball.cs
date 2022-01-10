@@ -1,9 +1,8 @@
 ﻿using Fusion;
+using UnityEngine;
 
 namespace Sources
 {
-    
-    
     public class Ball : NetworkBehaviour
     {
         [Networked] private TickTimer life { get; set; }

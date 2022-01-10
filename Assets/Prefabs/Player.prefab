@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5591181820218426126}
   - component: {fileID: 2474569593599215375}
-  - component: {fileID: 2474569593599215372}
   - component: {fileID: -172224009525937270}
   m_Layer: 0
   m_Name: Player
@@ -58,55 +57,9 @@ MonoBehaviour:
     RawGuidValue: 4511489169785104e96d8d3c66707bdb
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 2474569593599215372}
+  - {fileID: 0}
   - {fileID: -172224009525937270}
   SimulationBehaviours: []
---- !u!114 &2474569593599215372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5591181820218426122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1101589486, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  _interpolationTarget: {fileID: 7481885514535379115}
-  DetachInterpTarget: 0
-  SyncParent: 1
-  InterpolateErrorCorrection: 1
-  InterpolatedErrorCorrectionSettings:
-    MinRate: 3.3
-    MaxRate: 10
-    PosBlendStart: 0.25
-    PosBlendEnd: 1
-    PosMinCorrection: 0.025
-    PosTeleportDistance: 2
-    RotBlendStart: 0.1
-    RotBlendEnd: 0.5
-    RotTeleportRadians: 1.5
-  SyncScale: 0
-  Space: 0
-  _collider: {fileID: 7481885516031380757}
-  Config:
-    AllowedPenetration: 0.1
-    PenetrationCorrection: 0.5
-    BumpBehavior: 1
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    TriggerInteraction: 0
-    AirControl: 0
-    Acceleration: 10
-    Braking: 10
-    BaseJumpImpulse: 5
-    MaxSpeed: 4
-    MaxSlope: 60
-    MaxSlopeSpeed: 5
-    _gravity: {x: 0, y: -9.81, z: 0}
 --- !u!114 &-172224009525937270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,6 +75,8 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _ballPrefab: {fileID: 6447673313749731098, guid: f9ec19aeb950e044eb781d38947a8dc0, type: 3}
   _physxBallPrefab: {fileID: 4719336141477320419, guid: ea9b68976cc09854b8877ea67759bf40, type: 3}
+  _spawned:
+    _value: 0
 --- !u!1 &7481885514535379114
 GameObject:
   m_ObjectHideFlags: 0

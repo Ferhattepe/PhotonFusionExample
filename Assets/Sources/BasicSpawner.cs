@@ -23,6 +23,22 @@ namespace Sources
             _mouseButton1 = _mouseButton1 | Input.GetMouseButton(1);
         }
 
+        private async void Start()
+        {
+            _runner = gameObject.AddComponent<NetworkRunner>();
+            _runner.ProvideInput = true;
+            
+            var result = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+
+            if (result.Ok)
+            {
+            }
+            else
+            {
+                Debug.LogError($"Failed to Start: {result.ShutdownReason}");
+            }
+        }
+
         public void ButtonHost()
         {
             StartGame(GameMode.Host);
@@ -35,15 +51,13 @@ namespace Sources
 
         async void StartGame(GameMode mode)
         {
-            _runner = gameObject.AddComponent<NetworkRunner>();
-            _runner.ProvideInput = true;
-
             await _runner.StartGame(new StartGameArgs()
             {
                 GameMode = mode,
                 SessionName = "Dota",
                 Scene = SceneManager.GetActiveScene().buildIndex,
-                SceneObjectProvider = gameObject.AddComponent<NetworkSceneManagerDefault>()
+                SceneObjectProvider = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+                CustomLobbyName = "PrivateLobby"
             });
             canvas.enabled = false;
         }
@@ -129,6 +143,11 @@ namespace Sources
 
         public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
         {
+            Debug.LogError("OnSessionListUpdated");
+            foreach (var session in sessionList)
+            {
+                Debug.LogError($"Session {session.Name}");
+            }
         }
 
         public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
