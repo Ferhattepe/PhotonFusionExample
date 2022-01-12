@@ -27,7 +27,7 @@ namespace Sources
 
         [Networked] private TickTimer delay { get; set; }
 
-        [Networked] private Vector3 NetworkPosition { get; set; }
+        [Networked] private Vector3 NetworkedPosition { get; set; }
 
         // private NetworkCharacterController _characterController;
 
@@ -44,6 +44,7 @@ namespace Sources
         public override void Render()
         {
             material.color = Color.Lerp(material.color, Color.blue, Time.deltaTime);
+            transform.position = NetworkedPosition;
         }
 
         private void Update()
@@ -68,8 +69,12 @@ namespace Sources
             if (GetInput(out NetworkInputData data))
             {
                 data.direction.Normalize();
-                // _characterController.Move(data.direction * Runner.DeltaTime * 5);
                 transform.position += data.direction * Runner.DeltaTime * 5;
+                // _characterController.Move(data.direction * Runner.DeltaTime * 5);
+                if (Object.HasStateAuthority)
+                {
+                    NetworkedPosition = transform.position;
+                }
 
                 if (data.direction.sqrMagnitude > 0)
                 {
@@ -98,8 +103,6 @@ namespace Sources
                     }
                 }
             }
-
-            NetworkPosition = transform.position;
         }
     }
 }

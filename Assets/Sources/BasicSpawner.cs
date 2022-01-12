@@ -27,11 +27,12 @@ namespace Sources
         {
             _runner = gameObject.AddComponent<NetworkRunner>();
             _runner.ProvideInput = true;
-            
+
             var result = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
 
             if (result.Ok)
             {
+                canvas.enabled = true;
             }
             else
             {
